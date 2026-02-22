@@ -50,7 +50,7 @@ app.post('/api/upload', upload.single('image'), function (req, res) {
     })
   }
 });
-let database= 'mongodb://localhost/restaurant'
+let database = process.env.MONGODB_URI || 'mongodb://localhost/restaurant'
 mongoose.connect(database).then(
   ()=>{console.log("mongoose connected")},
   err =>{console.log("err",err);}
@@ -66,7 +66,7 @@ app.use('/api/cp',cpRouter)
 const http = require('http').createServer(app);
 const io = require('socket.io')(http, {
   cors: {
-    origin: "http://localhost:4200",
+    origin: "https://frontend-reservation.vercel.app",
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -78,6 +78,7 @@ io.on('connection', (socket) => {
     io.emit('contactAdmin', 'hello from back');
   });
 });
-http.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+http.listen(PORT, () => {
   console.log("Server is running...");
 });
